@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AssignmentListModule } from './assignment-list/assignment-list.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: process.env.DB_USERNAME,
       synchronize: true,
       entities: [`${__dirname}/**/*.entity{.js,.ts}`]
-    })
+    }),
+    AssignmentListModule
   ],
   controllers: [AppController],
   providers: [AppService]
