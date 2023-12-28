@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Get,
+  Param,
   Post,
   UsePipes,
   ValidationPipe
@@ -17,5 +19,15 @@ export class UserController {
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return this.userService.createUser(createUserDto);
+  }
+
+  @Get(':id')
+  async findUserById(@Param('id') id: string): Promise<UserEntity[]> {
+    return await this.userService.findUserById(id);
+  }
+
+  @Get()
+  async findUsers(): Promise<UserEntity[]> {
+    return await this.userService.findUsers();
   }
 }

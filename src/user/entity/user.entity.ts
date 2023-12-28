@@ -1,7 +1,9 @@
+import { AssignmentListEntity } from 'src/assignment-list/entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
@@ -28,6 +30,9 @@ export class UserEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @Column({ name: 'assigmentList', nullable: true })
-  assigmentList: string;
+  @OneToMany(
+    () => AssignmentListEntity,
+    (assignmentListEntity) => assignmentListEntity.user
+  )
+  assigmentList?: AssignmentListEntity[];
 }
