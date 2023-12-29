@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentListEntity } from './entity';
 import { Repository } from 'typeorm';
@@ -22,5 +22,25 @@ export class AssignmentListService {
       ...createAssigmentListDto,
       userId
     });
+  }
+
+  async findAssignmentList(): Promise<AssignmentListEntity[]> {
+    return await this.assignmentListRepository.find();
+  }
+
+  async findAssignmentListById(
+    listId: string
+  ): Promise<AssignmentListEntity[]> {
+    const assignmentList = await this.assignmentListRepository.find({
+      where: {
+        id: Number(listId)
+      }
+    });
+
+    if (!assignmentList || assignmentList.length === 0) {
+      throw new NotFoundException(`List not found for id ${listId}`);
+    }
+
+    return assignmentList;
   }
 }

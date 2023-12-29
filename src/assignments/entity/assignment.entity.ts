@@ -18,15 +18,19 @@ export class AssignmentEntity {
   description: string;
 
   @Column({ name: 'dead_line', nullable: false })
-  deadLine: string;
+  deadLine: Date;
 
   @Column({ name: 'assignment_list_id', nullable: false })
   assignmentListId: string;
 
-  @Column({ name: 'concluded', nullable: true })
+  @Column({ name: 'concluded', nullable: true, default: false })
   concluded: boolean;
 
-  @Column({ name: 'concludeAt', nullable: true })
+  @Column({
+    name: 'concludeAt',
+    nullable: true,
+    default: new Date(0)
+  })
   concludeAt: Date;
 
   @CreateDateColumn({ name: 'createAt' })

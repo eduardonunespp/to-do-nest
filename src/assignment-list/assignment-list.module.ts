@@ -8,6 +8,7 @@ import { UserModule } from 'src/user/user.module';
 @Module({
   imports: [TypeOrmModule.forFeature([AssignmentListEntity]), UserModule],
   providers: [AssignmentListService],
-  controllers: [AssignmentListController]
+  controllers: [AssignmentListController],
+  exports: [AssignmentListService]
 })
 export class AssignmentListModule {}
