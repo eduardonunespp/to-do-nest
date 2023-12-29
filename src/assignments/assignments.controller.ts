@@ -1,22 +1,29 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
+  Put,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common';
 import { AssignmentEntity } from './entity';
-import { CreateAssignmentDto, ReturnAssignmentDto } from './dtos';
+import {
+  CreateAssignmentDto,
+  ReturnAssignmentDto,
+  UpdatedAssignmentDto
+} from './dtos';
 import { AssignmentsService } from './assignments.service';
+import { DeleteResult } from 'typeorm';
 
+@UsePipes(ValidationPipe)
 @Controller('assignments')
 export class AssignmentsController {
   constructor(private assignmentService: AssignmentsService) {}
 
-  @UsePipes(ValidationPipe)
   @Post()
   async createAssignment(
     @Body()
@@ -56,6 +63,26 @@ export class AssignmentsController {
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.updatedUnconcludeAssignment(assignmentId)
+    );
+  }
+
+  @Delete(':id')
+  async deleteAssignment(
+    @Param('id') assignmentId: string
+  ): Promise<DeleteResult> {
+    return this.assignmentService.deleteAssignment(assignmentId);
+  }
+
+  @Put(':id')
+  async updateAssigment(
+    @Param('id') assignmentId: string,
+    @Body() assignmentUpdated: UpdatedAssignmentDto
+  ): Promise<ReturnAssignmentDto> {
+    return new ReturnAssignmentDto(
+      await this.assignmentService.updateAssignment(
+        assignmentId,
+        assignmentUpdated
+      )
     );
   }
 }

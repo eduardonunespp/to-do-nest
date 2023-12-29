@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentEntity } from './entity';
-import { Repository } from 'typeorm';
-import { CreateAssignmentDto } from './dtos';
+import { DeleteResult, Repository } from 'typeorm';
+import { CreateAssignmentDto, UpdatedAssignmentDto } from './dtos';
 import { AssignmentListService } from 'src/assignment-list/assignment-list.service';
 
 @Injectable()
@@ -47,7 +47,7 @@ export class AssignmentsService {
 
     if (!assignment) {
       throw new NotFoundException(
-        `assignment for id ${assignmentId} not found`
+        `Assignment with ID ${assignmentId} not found`
       );
     }
 
@@ -78,5 +78,23 @@ export class AssignmentsService {
     }
 
     return this.assignmentsRepository.save(assignment);
+  }
+
+  async deleteAssignment(assignmentId: string): Promise<DeleteResult> {
+    await this.findAssignmentById(assignmentId);
+
+    return this.assignmentsRepository.delete({ id: Number(assignmentId) });
+  }
+
+  async updateAssignment(
+    assignmentId: string,
+    assignmentUpdated: UpdatedAssignmentDto
+  ): Promise<AssignmentEntity> {
+    const assignment = await this.findAssignmentById(assignmentId);
+
+    return this.assignmentsRepository.save({
+      ...assignment,
+      ...assignmentUpdated
+    });
   }
 }

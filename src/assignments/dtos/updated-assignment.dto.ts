@@ -1,3 +1,15 @@
+import { IsNotEmpty, IsString } from 'class-validator';
+
 export class UpdatedAssignmentDto {
-  conclude: boolean;
+  @IsNotEmpty()
+  @IsString()
+  deadLine: string;
+
+  @IsNotEmpty()
+  @IsString()
+  assignmentListId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }
