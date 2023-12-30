@@ -41,8 +41,9 @@ export class AssignmentEntity {
 
   @ManyToOne(
     () => AssignmentListEntity,
-    (assignmentListEntity) => assignmentListEntity.assignments
+    (assignmentListEntity) => assignmentListEntity.assignments,
+    { onDelete: 'CASCADE' }
   )
   @JoinColumn({ name: 'assignment_list_id', referencedColumnName: 'id' })
-  assignmentList?: AssignmentListEntity[];
+  assignmentList?: AssignmentListEntity;
 }

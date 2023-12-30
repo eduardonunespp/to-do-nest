@@ -30,11 +30,12 @@ export class AssignmentListEntity {
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.assigmentList)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-  user?: UserEntity[];
+  user?: UserEntity;
 
   @OneToMany(
     () => AssignmentEntity,
-    (assignmentEntity) => assignmentEntity.assignmentList
+    (assignmentEntity) => assignmentEntity.assignmentList,
+    { onDelete: 'CASCADE' }
   )
   assignments?: AssignmentEntity[];
 }
