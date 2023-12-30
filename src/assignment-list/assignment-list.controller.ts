@@ -5,7 +5,9 @@ import {
   Get,
   Param,
   Patch,
-  Post
+  Post,
+  UsePipes,
+  ValidationPipe
 } from '@nestjs/common';
 import { AssignmentListService } from './assignment-list.service';
 import { AssignmentListEntity } from './entity';
@@ -13,6 +15,7 @@ import { CreateAssignmentListDto, UpdateAssignmentListDto } from './dtos';
 import { ReturnAssignmentListDto } from './dtos/return-assignment-list.dto';
 import { DeleteResult } from 'typeorm';
 
+@UsePipes(ValidationPipe)
 @Controller('assignment-list')
 export class AssignmentListController {
   constructor(private assigmentListService: AssignmentListService) {}

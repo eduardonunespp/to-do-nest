@@ -66,17 +66,14 @@ export class AssignmentListService {
   }
 
   async deleteAssignmentList(assignmentListId: string): Promise<DeleteResult> {
-    const assignmentList = await this.assignmentListRepository
-      .createQueryBuilder('assignmentList')
-      .leftJoinAndSelect('assignmentList.assignments', 'assignments')
-      .where('assignmentList.id = :id', { id: Number(assignmentListId) })
-      .getOne();
+    const assignmentList = await this.findAssignmentListById(assignmentListId);
 
-    if (!assignmentList) {
-      // Lida com a situação em que a AssignmentListEntity não foi encontrada
-      throw new NotFoundException(
-        `Assignment List with ID ${assignmentListId} not found`
-      );
+    const hasUncompletedAssignments = assignmentList.assignments.some(
+      (assignment) => assignment.concluded === false
+    );
+
+    if (hasUncompletedAssignments) {
+      throw new NotFoundException('Existem tarefas não concluídas na lista.');
     }
 
     return this.assignmentListRepository.delete({
