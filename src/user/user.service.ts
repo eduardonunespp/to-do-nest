@@ -38,14 +38,19 @@ export class UserService {
     return users;
   }
 
-  async findUserById(userId: string): Promise<UserEntity[]> {
-    const user = await this.userRepository.find({
+  async findUserById(userId: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOne({
       where: {
         id: Number(userId)
+      },
+      relations: {
+        assigmentList: {
+          assignments: true
+        }
       }
     });
 
-    if (!user || user.length === 0) {
+    if (!user) {
       throw new NotFoundException(`User not found for userId ${userId}`);
     }
 

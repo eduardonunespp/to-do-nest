@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './entity';
-import { CreateUserDto } from './dtos';
+import { CreateUserDto, ReturnUserDto } from './dtos';
 
 @Controller('user')
 export class UserController {
@@ -21,13 +21,15 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Get(':id')
-  async findUserById(@Param('id') id: string): Promise<UserEntity[]> {
-    return await this.userService.findUserById(id);
+  @Get()
+  async findUsers(): Promise<ReturnUserDto[]> {
+    return (await this.userService.findUsers()).map(
+      (user) => new ReturnUserDto(user)
+    );
   }
 
-  @Get()
-  async findUsers(): Promise<UserEntity[]> {
-    return await this.userService.findUsers();
+  @Get(':id')
+  async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
+    return new ReturnUserDto(await this.userService.findUserById(id));
   }
 }
