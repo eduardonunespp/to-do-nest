@@ -41,7 +41,7 @@ export class AssignmentsService {
   async findAssignmentById(assignmentId: string): Promise<AssignmentEntity> {
     const assignment = await this.assignmentsRepository.findOne({
       where: {
-        id: Number(assignmentId)
+        id: assignmentId
       }
     });
 
@@ -83,7 +83,7 @@ export class AssignmentsService {
   async deleteAssignment(assignmentId: string): Promise<DeleteResult> {
     await this.findAssignmentById(assignmentId);
 
-    return this.assignmentsRepository.delete({ id: Number(assignmentId) });
+    return this.assignmentsRepository.delete({ id: assignmentId });
   }
 
   async updateAssignment(

@@ -56,7 +56,7 @@ export class AssignmentListService {
   async findAssignmentListById(listId: string): Promise<AssignmentListEntity> {
     const assignmentList = await this.assignmentListRepository.findOne({
       where: {
-        id: Number(listId)
+        id: listId
       },
       relations: ['assignments']
     });
@@ -96,7 +96,7 @@ export class AssignmentListService {
     }
 
     return this.assignmentListRepository.delete({
-      id: Number(assignmentListId)
+      id: assignmentListId
     });
   }
 }

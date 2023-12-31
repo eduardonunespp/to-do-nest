@@ -8,11 +8,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class AssignmentEntity {
-  @PrimaryGeneratedColumn('rowid')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuidv4();
 
   @Column({ name: 'description', nullable: false })
   description: string;

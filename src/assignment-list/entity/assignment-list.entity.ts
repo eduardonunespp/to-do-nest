@@ -10,11 +10,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class AssignmentListEntity {
-  @PrimaryGeneratedColumn('rowid')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuidv4();
 
   @Column({ name: 'name', nullable: false })
   name: string;

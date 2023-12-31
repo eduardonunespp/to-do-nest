@@ -1,7 +1,7 @@
 import { AssignmentEntity } from '../entity';
 
 export class ReturnAssignmentDto {
-  id: number;
+  id: string;
   description: string;
   deadline: Date;
   concludeAt: Date;

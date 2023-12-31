@@ -2,7 +2,7 @@ import { ReturnAssignmentDto } from 'src/assignments/dtos';
 import { AssignmentListEntity } from '../entity';
 
 export class ReturnAssignmentListDto {
-  id: number;
+  id: string;
   name: string;
   assignments?: ReturnAssignmentDto[];
 
