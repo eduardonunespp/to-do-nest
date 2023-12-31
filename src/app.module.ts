@@ -7,6 +7,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssignmentListModule } from './assignment-list/assignment-list.module';
 import { AssignmentsModule } from './assignments/assignments.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './core/guards/roles.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -26,9 +29,16 @@ import { AuthModule } from './auth/auth.module';
     }),
     AssignmentListModule,
     AssignmentsModule,
-    AuthModule
+    AuthModule,
+    JwtModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    }
+  ]
 })
 export class AppModule {}

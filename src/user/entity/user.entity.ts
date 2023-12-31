@@ -24,6 +24,9 @@ export class UserEntity {
   @Column({ name: 'confirm_password', nullable: false })
   confirmPassword: string;
 
+  @Column({ name: 'type_user', nullable: false })
+  typeUser: number;
+
   @CreateDateColumn({ name: 'created_at' })
   createAt: Date;
 

@@ -34,6 +34,25 @@ export class AssignmentListService {
     return assigmentList;
   }
 
+  async findAllAssignmentListByUserId(
+    userId: string
+  ): Promise<AssignmentListEntity[]> {
+    await this.userService.findUserById(userId);
+
+    const assignmentLists = await this.assignmentListRepository.find({
+      where: { userId: userId },
+      relations: ['assignments']
+    });
+
+    if (!assignmentLists || assignmentLists.length === 0) {
+      throw new NotFoundException(
+        `Assignment lists not found for user with ID: ${userId}`
+      );
+    }
+
+    return assignmentLists;
+  }
+
   async findAssignmentListById(listId: string): Promise<AssignmentListEntity> {
     const assignmentList = await this.assignmentListRepository.findOne({
       where: {

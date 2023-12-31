@@ -18,7 +18,11 @@ import {
 } from './dtos';
 import { AssignmentsService } from './assignments.service';
 import { DeleteResult } from 'typeorm';
+import { Roles } from 'src/core/decorators/roles.decorator';
+import { UserType } from 'src/user/enum';
+import { UserId } from 'src/core/decorators/user-id.decorator';
 
+@Roles(UserType.User)
 @UsePipes(ValidationPipe)
 @Controller('assignments')
 export class AssignmentsController {
@@ -39,9 +43,9 @@ export class AssignmentsController {
     );
   }
 
-  @Get(':id')
+  @Get()
   async findAssignmentsById(
-    @Param('id') assignmentId: string
+    @UserId() assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.findAssignmentById(assignmentId)

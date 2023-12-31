@@ -14,15 +14,19 @@ import { AssignmentListEntity } from './entity';
 import { CreateAssignmentListDto, UpdateAssignmentListDto } from './dtos';
 import { ReturnAssignmentListDto } from './dtos/return-assignment-list.dto';
 import { DeleteResult } from 'typeorm';
+import { Roles } from 'src/core/decorators/roles.decorator';
+import { UserType } from 'src/user/enum';
+import { UserId } from 'src/core/decorators/user-id.decorator';
 
+@Roles(UserType.User)
 @UsePipes(ValidationPipe)
 @Controller('assignment-list')
 export class AssignmentListController {
   constructor(private assigmentListService: AssignmentListService) {}
 
-  @Post(':id')
+  @Post()
   async createAssigmentListDto(
-    @Param('id') id: string,
+    @UserId() id: string,
     @Body() createAssigmentList: CreateAssignmentListDto
   ): Promise<AssignmentListEntity> {
     return await this.assigmentListService.createAssigmentList(
@@ -32,10 +36,12 @@ export class AssignmentListController {
   }
 
   @Get()
-  async findAssignmentList(): Promise<ReturnAssignmentListDto[]> {
-    return (await this.assigmentListService.findAllAssignmentList()).map(
-      (assignmentList) => new ReturnAssignmentListDto(assignmentList)
-    );
+  async findAssignmentList(
+    @UserId() userId: string
+  ): Promise<ReturnAssignmentListDto[]> {
+    return (
+      await this.assigmentListService.findAllAssignmentListByUserId(userId)
+    ).map((assignmentList) => new ReturnAssignmentListDto(assignmentList));
   }
 
   @Get(':id')
