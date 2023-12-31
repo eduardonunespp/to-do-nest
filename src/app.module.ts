@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssignmentListModule } from './assignment-list/assignment-list.module';
 import { AssignmentsModule } from './assignments/assignments.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AssignmentsModule } from './assignments/assignments.module';
       entities: [`${__dirname}/**/*.entity{.js,.ts}`]
     }),
     AssignmentListModule,
-    AssignmentsModule
+    AssignmentsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]
