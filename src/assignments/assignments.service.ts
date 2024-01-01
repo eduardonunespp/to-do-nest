@@ -1,15 +1,22 @@
-import { Injectable, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ParseUUIDPipe,
+  UnprocessableEntityException
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentEntity } from './entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { CreateAssignmentDto, UpdatedAssignmentDto } from './dtos';
 import { AssignmentListService } from 'src/assignment-list/assignment-list.service';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AssignmentsService {
   constructor(
     @InjectRepository(AssignmentEntity)
     private readonly assignmentsRepository: Repository<AssignmentEntity>,
+    private readonly userService: UserService,
     private readonly assignmentListService: AssignmentListService
   ) {}
   async createAssignment(
@@ -33,6 +40,12 @@ export class AssignmentsService {
     const date = createAssignment.deadLine;
     const formattedDate = new Date(date);
 
+    if (formattedDate < new Date()) {
+      throw new UnprocessableEntityException(
+        'a data de conclusão deve ser maior que a data atual'
+      );
+    }
+
     return await this.assignmentsRepository.save({
       ...createAssignment,
       assignmentListId,
@@ -50,6 +63,23 @@ export class AssignmentsService {
     return assignments;
   }
 
+  async findAssignmentsByUserId(userId: string): Promise<AssignmentEntity[]> {
+    const user = await this.userService.findUserById(userId);
+
+    if (!user.assigmentList || user.assigmentList.length === 0) {
+      throw new NotFoundException(`assignments not found`);
+    }
+
+    const assignments: AssignmentEntity[] = [];
+    user.assigmentList.forEach((assignmentList) => {
+      if (assignmentList.assignments) {
+        assignments.push(...assignmentList.assignments);
+      }
+    });
+
+    return assignments;
+  }
+
   async findAssignmentById(assignmentId: string): Promise<AssignmentEntity> {
     const assignment = await this.assignmentsRepository.findOne({
       where: {
@@ -59,7 +89,7 @@ export class AssignmentsService {
 
     if (!assignment) {
       throw new NotFoundException(
-        `Assignment with ID ${assignmentId} not found`
+        `assignment not found with Id ${assignmentId}`
       );
     }
 
@@ -86,7 +116,7 @@ export class AssignmentsService {
 
     if (assignment.concluded) {
       assignment.concluded = false;
-      assignment.concludeAt = null;
+      assignment.concludeAt = new Date(0);
     }
 
     return this.assignmentsRepository.save(assignment);

@@ -4,7 +4,8 @@ import {
   IsEmail,
   Matches,
   Validate,
-  MaxLength
+  MaxLength,
+  ValidationArguments
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -29,7 +30,15 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   @Validate(
-    (value, args) => value === args.object.password && value.length >= 8,
+    (value, args: ValidationArguments) => {
+      const confirmPassword = value;
+      const password = (args.object as CreateUserDto).password;
+      return (
+        password === confirmPassword &&
+        value.length >= 8 &&
+        password.length >= 8
+      );
+    },
     {
       message: 'As senhas não coincidem ou têm menos de 8 caracteres.'
     }

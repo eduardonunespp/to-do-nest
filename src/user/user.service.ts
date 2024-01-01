@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException
+} from '@nestjs/common';
 import { UserEntity } from './entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,6 +18,20 @@ export class UserService {
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = await this.findUserByEmail(createUserDto.email).catch(
+      () => undefined
+    );
+
+    if (user) {
+      throw new ConflictException('email registered in system ');
+    }
+
+    const { password, confirmPassword } = createUserDto;
+
+    if (password != confirmPassword || password.length < 8) {
+      throw new UnprocessableEntityException('As senhas não coincidem');
+    }
+
     const saltOrRounds = 10;
 
     const passwordHashed = await hash(createUserDto.password, saltOrRounds);
@@ -33,7 +52,7 @@ export class UserService {
     const users = await this.userRepository.find();
 
     if (!users || users.length === 0) {
-      throw new NotFoundException(`Users Not Found`);
+      throw new NotFoundException(`users not found`);
     }
 
     return users;
@@ -52,7 +71,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User not found for userId ${userId}`);
+      throw new NotFoundException(`user not found for userId ${userId}`);
     }
 
     return user;
@@ -66,7 +85,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException(`User not found with email ${email}`);
+      throw new NotFoundException(`user not found with email ${email}`);
     }
 
     return user;

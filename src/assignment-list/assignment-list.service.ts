@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentListEntity } from './entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -46,7 +50,7 @@ export class AssignmentListService {
 
     if (!assignmentLists || assignmentLists.length === 0) {
       throw new NotFoundException(
-        `Assignment lists not found for user with ID: ${userId}`
+        `assignment list not found for user with Id: ${userId}`
       );
     }
 
@@ -62,7 +66,7 @@ export class AssignmentListService {
     });
 
     if (!assignmentList) {
-      throw new NotFoundException(`list not found for id ${listId}`);
+      throw new NotFoundException(`list not found for user with Id ${listId}`);
     }
 
     return assignmentList;
@@ -75,7 +79,9 @@ export class AssignmentListService {
     const assigmentList = await this.findAssignmentListById(assignmentlistId);
 
     if (!assigmentList) {
-      throw new NotFoundException(`list not found for id ${assignmentlistId}`);
+      throw new NotFoundException(
+        `list not found for user with Id ${assignmentlistId}`
+      );
     }
 
     return this.assignmentListRepository.save({
@@ -92,7 +98,7 @@ export class AssignmentListService {
     );
 
     if (hasUncompletedAssignments) {
-      throw new NotFoundException('Existem tarefas não concluídas na lista.');
+      throw new BadGatewayException('Existem tarefas não concluídas na lista.');
     }
 
     return this.assignmentListRepository.delete({
