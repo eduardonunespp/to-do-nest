@@ -1,7 +1,7 @@
 import {
-  BadGatewayException,
   Injectable,
-  NotFoundException
+  NotFoundException,
+  UnprocessableEntityException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentListEntity } from './entity';
@@ -98,7 +98,9 @@ export class AssignmentListService {
     );
 
     if (hasUncompletedAssignments) {
-      throw new BadGatewayException('Existem tarefas não concluídas na lista.');
+      throw new UnprocessableEntityException(
+        'Existem tarefas não concluídas na lista.'
+      );
     }
 
     return this.assignmentListRepository.delete({
