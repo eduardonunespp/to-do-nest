@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UsePipes,
@@ -46,7 +47,7 @@ export class AssignmentListController {
 
   @Get(':id')
   async findAssignmentListById(
-    @Param('id') assignmentListId: string
+    @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<ReturnAssignmentListDto> {
     return new ReturnAssignmentListDto(
       await this.assigmentListService.findAssignmentListById(assignmentListId)
@@ -55,7 +56,7 @@ export class AssignmentListController {
 
   @Patch(':id')
   async updateAssignmentList(
-    @Param('id') assignmentListId: string,
+    @Param('id', new ParseUUIDPipe()) assignmentListId: string,
     @Body() updatedAssignmentList: UpdateAssignmentListDto
   ): Promise<ReturnAssignmentListDto> {
     return new ReturnAssignmentListDto(
@@ -68,7 +69,7 @@ export class AssignmentListController {
 
   @Delete(':id')
   async deleteAssignmentList(
-    @Param('id') assignmentListId: string
+    @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<DeleteResult> {
     return this.assigmentListService.deleteAssignmentList(assignmentListId);
   }

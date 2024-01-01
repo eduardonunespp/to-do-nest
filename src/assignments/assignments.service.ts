@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssignmentEntity } from './entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -19,11 +19,23 @@ export class AssignmentsService {
       createAssignment.assignmentListId
     );
 
+    const parseUUIDPipe = new ParseUUIDPipe({ version: '4' });
+
+    const assignmentListId = await parseUUIDPipe.transform(
+      createAssignment.assignmentListId,
+      {
+        type: 'body',
+        metatype: String,
+        data: ''
+      }
+    );
+
     const date = createAssignment.deadLine;
     const formattedDate = new Date(date);
 
     return await this.assignmentsRepository.save({
       ...createAssignment,
+      assignmentListId,
       deadLine: formattedDate
     });
   }

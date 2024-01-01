@@ -7,9 +7,5 @@ export class UpdatedAssignmentDto {
 
   @IsNotEmpty()
   @IsString()
-  assignmentListId: string;
-
-  @IsNotEmpty()
-  @IsString()
   description: string;
 }

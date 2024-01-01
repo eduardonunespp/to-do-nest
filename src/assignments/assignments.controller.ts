@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Put,
@@ -20,7 +21,6 @@ import { AssignmentsService } from './assignments.service';
 import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserType } from 'src/user/enum';
-import { UserId } from 'src/core/decorators/user-id.decorator';
 
 @Roles(UserType.User)
 @UsePipes(ValidationPipe)
@@ -43,9 +43,9 @@ export class AssignmentsController {
     );
   }
 
-  @Get()
+  @Get(':id')
   async findAssignmentsById(
-    @UserId() assignmentId: string
+    @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.findAssignmentById(assignmentId)
@@ -54,7 +54,7 @@ export class AssignmentsController {
 
   @Patch(':id/conclude')
   async updatedAssignmentConclude(
-    @Param('id') assignmentId: string
+    @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.updatedConcludeAssignment(assignmentId)
@@ -63,7 +63,7 @@ export class AssignmentsController {
 
   @Patch(':id/unconclude')
   async updatedAssignmentUnconclude(
-    @Param('id') assignmentId: string
+    @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.updatedUnconcludeAssignment(assignmentId)
@@ -72,14 +72,14 @@ export class AssignmentsController {
 
   @Delete(':id')
   async deleteAssignment(
-    @Param('id') assignmentId: string
+    @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<DeleteResult> {
     return this.assignmentService.deleteAssignment(assignmentId);
   }
 
   @Put(':id')
   async updateAssigment(
-    @Param('id') assignmentId: string,
+    @Param('id', new ParseUUIDPipe()) assignmentId: string,
     @Body() assignmentUpdated: UpdatedAssignmentDto
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
