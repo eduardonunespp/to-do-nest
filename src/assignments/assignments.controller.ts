@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Put,
+  Query,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common';
@@ -39,11 +40,13 @@ export class AssignmentsController {
 
   @Get()
   async findAssignments(
-    @UserId() userId: string
+    @UserId() userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10
   ): Promise<ReturnAssignmentDto[]> {
-    return (await this.assignmentService.findAssignmentsByUserId(userId)).map(
-      (assignment) => new ReturnAssignmentDto(assignment)
-    );
+    return (
+      await this.assignmentService.findAssignmentsByUserId(userId, page, limit)
+    ).map((assignment) => new ReturnAssignmentDto(assignment));
   }
 
   @Get(':id')

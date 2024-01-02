@@ -39,13 +39,18 @@ export class AssignmentListService {
   }
 
   async findAllAssignmentListByUserId(
-    userId: string
+    userId: string,
+    page: number = 1,
+    limit: number = 10
   ): Promise<AssignmentListEntity[]> {
     await this.userService.findUserById(userId);
+    const skip = (page - 1) * limit;
 
     const assignmentLists = await this.assignmentListRepository.find({
       where: { userId: userId },
-      relations: ['assignments']
+      relations: ['assignments'],
+      skip,
+      take: limit
     });
 
     if (!assignmentLists || assignmentLists.length === 0) {

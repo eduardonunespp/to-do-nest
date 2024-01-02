@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common';
@@ -38,10 +39,16 @@ export class AssignmentListController {
 
   @Get()
   async findAssignmentList(
-    @UserId() userId: string
+    @UserId() userId: string,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10
   ): Promise<ReturnAssignmentListDto[]> {
     return (
-      await this.assigmentListService.findAllAssignmentListByUserId(userId)
+      await this.assigmentListService.findAllAssignmentListByUserId(
+        userId,
+        page,
+        limit
+      )
     ).map((assignmentList) => new ReturnAssignmentListDto(assignmentList));
   }
 

@@ -53,8 +53,15 @@ export class AssignmentsService {
     });
   }
 
-  async findAssignments(): Promise<AssignmentEntity[]> {
-    const assignments = await this.assignmentsRepository.find();
+  async findAssignments(
+    page: number = 1,
+    limit: number = 10
+  ): Promise<AssignmentEntity[]> {
+    const skip = (page - 1) * limit;
+    const assignments = await this.assignmentsRepository.find({
+      skip,
+      take: limit
+    });
 
     if (!assignments || assignments.length === 0) {
       throw new NotFoundException(`assignments not found`);
@@ -63,21 +70,29 @@ export class AssignmentsService {
     return assignments;
   }
 
-  async findAssignmentsByUserId(userId: string): Promise<AssignmentEntity[]> {
+  async findAssignmentsByUserId(
+    userId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Promise<AssignmentEntity[]> {
     const user = await this.userService.findUserById(userId);
 
     if (!user.assigmentList || user.assigmentList.length === 0) {
       throw new NotFoundException(`assignments not found`);
     }
 
-    const assignments: AssignmentEntity[] = [];
+    let assignments: AssignmentEntity[] = [];
     user.assigmentList.forEach((assignmentList) => {
       if (assignmentList.assignments) {
-        assignments.push(...assignmentList.assignments);
+        assignments = assignments.concat(assignmentList.assignments);
       }
     });
 
-    return assignments;
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedAssignments = assignments.slice(startIndex, endIndex);
+
+    return paginatedAssignments;
   }
 
   async findAssignmentById(assignmentId: string): Promise<AssignmentEntity> {
