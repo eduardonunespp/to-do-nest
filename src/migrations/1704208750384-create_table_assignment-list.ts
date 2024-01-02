@@ -11,8 +11,8 @@ export class CreateTableAssignmentList1704208750384
           id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
           name VARCHAR NOT NULL,
           user_id UUID NOT NULL,
-          createAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           
           CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user_entity(id) ON DELETE CASCADE
         );

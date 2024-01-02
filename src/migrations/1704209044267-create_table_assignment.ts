@@ -12,9 +12,9 @@ export class CreateTableAssignment1704209044267 implements MigrationInterface {
           dead_line TIMESTAMP NOT NULL,
           assignment_list_id UUID NOT NULL,
           concluded BOOLEAN DEFAULT FALSE,
-          concludeAt TIMESTAMP DEFAULT 'epoch'::TIMESTAMP,
-          createAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updateAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          conclude_at TIMESTAMP DEFAULT 'epoch'::TIMESTAMP,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   
           CONSTRAINT fk_assignment_list FOREIGN KEY (assignment_list_id) REFERENCES assignment_list_entity(id) ON DELETE CASCADE
         );`);

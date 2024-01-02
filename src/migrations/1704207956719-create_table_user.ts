@@ -3,7 +3,8 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 export class CreateTableUser1704207956719 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     queryRunner.query(`
-    CREATE EXTENSION IF NOT EXISTS "uuid-ossp"; 
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
     CREATE TABLE IF NOT EXISTS user_entity (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR NOT NULL,
@@ -13,6 +14,7 @@ export class CreateTableUser1704207956719 implements MigrationInterface {
       type_user INTEGER NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
     `);
   }
 

@@ -28,16 +28,16 @@ export class AssignmentEntity {
   concluded: boolean;
 
   @Column({
-    name: 'concludeAt',
+    name: 'conclude_at',
     nullable: true,
     default: new Date(0)
   })
   concludeAt: Date;
 
-  @CreateDateColumn({ name: 'createAt' })
+  @CreateDateColumn({ name: 'created_at' })
   createAt: Date;
 
-  @UpdateDateColumn({ name: 'updateAt' })
+  @UpdateDateColumn({ name: 'updated_at' })
   updateAt: Date;
 
   @ManyToOne(

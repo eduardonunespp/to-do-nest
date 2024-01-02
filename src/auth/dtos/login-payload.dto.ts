@@ -1,7 +1,7 @@
 import { UserEntity } from 'src/user/entity';
 
 export class loginPayloadDto {
-  id: number;
+  id: string;
   typeUser: number;
 
   constructor(user: UserEntity) {

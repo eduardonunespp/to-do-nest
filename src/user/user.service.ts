@@ -61,7 +61,7 @@ export class UserService {
   async findUserById(userId: string): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: {
-        id: Number(userId)
+        id: userId
       },
       relations: {
         assigmentList: {

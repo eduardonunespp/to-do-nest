@@ -7,10 +7,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+
 @Entity()
 export class UserEntity {
-  @PrimaryGeneratedColumn('rowid')
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string = uuidv4();
 
   @Column({ name: 'name', nullable: false })
   name: string;
@@ -28,7 +30,7 @@ export class UserEntity {
   typeUser: number;
 
   @CreateDateColumn({ name: 'created_at' })
-  createAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;

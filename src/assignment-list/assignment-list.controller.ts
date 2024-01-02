@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { AssignmentListService } from './assignment-list.service';
 import { AssignmentListEntity } from './entity';
-import { CreateAssignmentListDto, UpdateAssignmentListDto } from './dtos';
+import {
+  CreateAssignmentListDto,
+  ReturnAssignmentListUpdatedDto,
+  UpdateAssignmentListDto
+} from './dtos';
 import { ReturnAssignmentListDto } from './dtos/return-assignment-list.dto';
 import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
@@ -66,7 +70,7 @@ export class AssignmentListController {
     @Param('id', new ParseUUIDPipe()) assignmentListId: string,
     @Body() updatedAssignmentList: UpdateAssignmentListDto
   ): Promise<ReturnAssignmentListDto> {
-    return new ReturnAssignmentListDto(
+    return new ReturnAssignmentListUpdatedDto(
       await this.assigmentListService.updateAssigmentList(
         assignmentListId,
         updatedAssignmentList

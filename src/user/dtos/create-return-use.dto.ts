@@ -5,9 +5,9 @@ export class CreateReturnUserDto {
   email: string;
   password: string;
   confirmPassword: string;
-  id: number;
-  createAt: Date;
-  updateAt: Date;
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
 
   constructor(userEntity: UserEntity) {
     this.name = userEntity.name;
@@ -15,7 +15,7 @@ export class CreateReturnUserDto {
     this.password = userEntity.password;
     this.confirmPassword = userEntity.confirmPassword;
     this.id = userEntity.id;
-    this.createAt = userEntity.createAt;
-    this.updateAt = userEntity.updatedAt;
+    this.createdAt = userEntity.createdAt;
+    this.updatedAt = userEntity.updatedAt;
   }
 }

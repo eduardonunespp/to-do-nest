@@ -23,11 +23,11 @@ export class AssignmentListEntity {
   @Column({ name: 'user_id', nullable: false })
   userId: string;
 
-  @CreateDateColumn({ name: 'createAt' })
-  createAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-  @UpdateDateColumn({ name: 'updateAt' })
-  updateAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.assigmentList)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })

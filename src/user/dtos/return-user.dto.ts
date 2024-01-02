@@ -2,7 +2,7 @@ import { ReturnAssignmentListDto } from 'src/assignment-list/dtos';
 import { UserEntity } from '../entity';
 
 export class ReturnUserDto {
-  id: number;
+  id: string;
   name: string;
   email: string;
   assignemntList?: ReturnAssignmentListDto[];
