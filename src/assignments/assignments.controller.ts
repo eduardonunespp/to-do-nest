@@ -23,7 +23,10 @@ import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserType } from 'src/user/enum';
 import { UserId } from 'src/core/decorators/user-id.decorator';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Assignments')
+@ApiBearerAuth('KEY_AUTH')
 @Roles(UserType.User)
 @UsePipes(ValidationPipe)
 @Controller('assignments')
@@ -31,6 +34,7 @@ export class AssignmentsController {
   constructor(private assignmentService: AssignmentsService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Add a new assignment ' })
   async createAssignment(
     @Body()
     createAssignment: CreateAssignmentDto
@@ -39,6 +43,7 @@ export class AssignmentsController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Search assignments ' })
   async findAssignments(
     @UserId() userId: string,
     @Query('page') page: number = 1,
@@ -50,6 +55,7 @@ export class AssignmentsController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a assignment ' })
   async findAssignmentsById(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -59,6 +65,7 @@ export class AssignmentsController {
   }
 
   @Patch(':id/conclude')
+  @ApiOperation({ summary: 'Conclude a task ' })
   async updatedAssignmentConclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -68,6 +75,7 @@ export class AssignmentsController {
   }
 
   @Patch(':id/unconclude')
+  @ApiOperation({ summary: 'Desconclude a task ' })
   async updatedAssignmentUnconclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -77,6 +85,7 @@ export class AssignmentsController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a assignment ' })
   async deleteAssignment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<DeleteResult> {
@@ -84,6 +93,7 @@ export class AssignmentsController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Edit a assignment ' })
   async updateAssigment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string,
     @Body() assignmentUpdated: UpdatedAssignmentDto

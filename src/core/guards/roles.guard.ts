@@ -27,6 +27,9 @@ export class RolesGuard implements CanActivate {
       .verifyAsync(authorization, { secret: process.env.JWT_SECRET })
       .catch(() => undefined);
 
+    console.log('loginPayload.typeUser:', loginPayload.typeUser);
+    console.log('requiredRoles:', requiredRoles);
+
     if (!loginPayload) {
       return false;
     }

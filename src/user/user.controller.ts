@@ -9,13 +9,16 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateReturnUserDto, CreateUserDto, ReturnUserDto } from './dtos';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @UsePipes(ValidationPipe)
-  @Post()
+  @Post('/register')
+  @ApiOperation({ summary: 'Register account' })
   async createUser(
     @Body() createUserDto: CreateUserDto
   ): Promise<CreateReturnUserDto> {

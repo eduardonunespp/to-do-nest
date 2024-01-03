@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
@@ -9,17 +10,20 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @MaxLength(255, { message: 'O nome deve ter no máximo 255 caracteres.' })
   name: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @IsEmail()
   @MaxLength(255, { message: 'O email deve ter no máximo 255 caracteres.' })
   email: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @Matches(/^.{8,}$/, {
     message: 'A senha deve ter no mínimo 8 caracteres.'
@@ -27,6 +31,7 @@ export class CreateUserDto {
   @MaxLength(255, { message: 'A senha deve ter no máximo 255 caracteres.' })
   password: string;
 
+  @ApiProperty()
   @IsNotEmpty()
   @IsString()
   @Validate(
