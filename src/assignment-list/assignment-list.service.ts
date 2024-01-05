@@ -54,9 +54,7 @@ export class AssignmentListService {
     });
 
     if (!assignmentLists || assignmentLists.length === 0) {
-      throw new NotFoundException(
-        `assignment list not found for user with Id: ${userId}`
-      );
+      throw new NotFoundException(`assignment list not found`);
     }
 
     return assignmentLists;
@@ -71,7 +69,7 @@ export class AssignmentListService {
     });
 
     if (!assignmentList) {
-      throw new NotFoundException(`list not found for user with Id ${listId}`);
+      throw new NotFoundException(`list not found for user with id ${listId}`);
     }
 
     return assignmentList;

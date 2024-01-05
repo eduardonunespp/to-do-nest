@@ -10,20 +10,29 @@ import {
 } from 'class-validator';
 
 export class CreateUserDto {
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Nome de Usuário',
+    example: 'userExample'
+  })
   @IsNotEmpty()
   @IsString()
   @MaxLength(255, { message: 'O nome deve ter no máximo 255 caracteres.' })
   name: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Email de Usuário',
+    example: 'example@gmail.com'
+  })
   @IsNotEmpty()
   @IsString()
   @IsEmail()
   @MaxLength(255, { message: 'O email deve ter no máximo 255 caracteres.' })
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Senha de Usuário',
+    example: 'example123'
+  })
   @IsNotEmpty()
   @Matches(/^.{8,}$/, {
     message: 'A senha deve ter no mínimo 8 caracteres.'
@@ -31,7 +40,10 @@ export class CreateUserDto {
   @MaxLength(255, { message: 'A senha deve ter no máximo 255 caracteres.' })
   password: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    description: 'Senha de Confirmação',
+    example: 'example123'
+  })
   @IsNotEmpty()
   @IsString()
   @Validate(

@@ -23,18 +23,37 @@ import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserType } from 'src/user/enum';
 import { UserId } from 'src/core/decorators/user-id.decorator';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger';
+import {
+  ReturnAssignmentCreatedSwagger,
+  ReturnAssignmentListSwagger,
+  ReturnAssignmentListUpdatedSwagger,
+  ReturnOneAssignmentListSwagger
+} from './swagger';
+import { ReturnDeletedItemSwagger } from 'src/swagger';
 
-@ApiTags('Assignment-List')
 @Roles(UserType.User)
+@ApiBearerAuth('KEY_AUTH')
+@ApiTags('Assignment-List')
 @UsePipes(ValidationPipe)
 @Controller('assignment-list')
 export class AssignmentListController {
   constructor(private assigmentListService: AssignmentListService) {}
 
   @Post()
-  @ApiBearerAuth('KEY_AUTH')
   @ApiOperation({ summary: 'Add a new to-do list' })
+  @ApiResponse({
+    status: 201,
+    description: 'Lista criada com sucesso',
+    type: ReturnAssignmentCreatedSwagger
+  })
+  @ApiResponse({ status: 400, description: 'Parâmetros inválidos' })
   async createAssigmentListDto(
     @UserId() id: string,
     @Body() createAssigmentList: CreateAssignmentListDto
@@ -47,22 +66,37 @@ export class AssignmentListController {
 
   @Get()
   @ApiOperation({ summary: 'Search to-do list ' })
+  @ApiResponse({
+    status: 200,
+    description: 'AssignmentLists retornadas com sucesso',
+    type: ReturnAssignmentListSwagger
+  })
+  @ApiQuery({ name: 'Page', required: false })
+  @ApiQuery({ name: 'PerPage', required: false })
   async findAssignmentList(
     @UserId() userId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10
-  ): Promise<ReturnAssignmentListDto[]> {
-    return (
+    @Query('Page') page: number = 1,
+    @Query('PerPage') limit: number = 10
+  ): Promise<{ items: ReturnAssignmentListDto[] }> {
+    const assignmentLists =
       await this.assigmentListService.findAllAssignmentListByUserId(
         userId,
         page,
         limit
-      )
-    ).map((assignmentList) => new ReturnAssignmentListDto(assignmentList));
+      );
+    const mappedAssignmentLists = assignmentLists.map(
+      (assignmentList) => new ReturnAssignmentListDto(assignmentList)
+    );
+    return { items: mappedAssignmentLists };
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a to-do list ' })
+  @ApiResponse({
+    status: 200,
+    description: 'AssignmentList retornadas com sucesso',
+    type: ReturnOneAssignmentListSwagger
+  })
   async findAssignmentListById(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<ReturnAssignmentListDto> {
@@ -73,6 +107,11 @@ export class AssignmentListController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Edit a to-do list' })
+  @ApiResponse({
+    status: 200,
+    description: 'AssignmentList editada com sucesso',
+    type: ReturnAssignmentListUpdatedSwagger
+  })
   async updateAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string,
     @Body() updatedAssignmentList: UpdateAssignmentListDto
@@ -87,6 +126,11 @@ export class AssignmentListController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a to-do list ' })
+  @ApiResponse({
+    status: 200,
+    description: 'AssignmentList deletada com sucesso',
+    type: ReturnDeletedItemSwagger
+  })
   async deleteAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<DeleteResult> {

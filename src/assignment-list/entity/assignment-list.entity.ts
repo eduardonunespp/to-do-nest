@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { AssignmentEntity } from 'src/assignments/entity';
 import { UserEntity } from 'src/user/entity';
 import {
@@ -15,18 +16,23 @@ import { v4 as uuidv4 } from 'uuid';
 @Entity()
 export class AssignmentListEntity {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   id: string = uuidv4();
 
   @Column({ name: 'name', nullable: false })
+  @ApiProperty()
   name: string;
 
   @Column({ name: 'user_id', nullable: false })
+  @ApiProperty()
   userId: string;
 
   @CreateDateColumn({ name: 'created_at' })
+  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
+  @ApiProperty()
   updatedAt: Date;
 
   @ManyToOne(() => UserEntity, (userEntity) => userEntity.assigmentList)

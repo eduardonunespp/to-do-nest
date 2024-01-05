@@ -23,7 +23,20 @@ import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
 import { UserType } from 'src/user/enum';
 import { UserId } from 'src/core/decorators/user-id.decorator';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger';
+import {
+  ReturnCreateAssignmentSwagger,
+  ReturnAssignemntsSwagger,
+  ReturnUnconcludeAssignmentSwagger
+} from './swagger';
+import { ReturnOneAssignmentSwagger } from './swagger/return-one-assignment';
+import { ReturnDeletedItemSwagger } from 'src/swagger';
 
 @ApiTags('Assignments')
 @ApiBearerAuth('KEY_AUTH')
@@ -35,6 +48,11 @@ export class AssignmentsController {
 
   @Post()
   @ApiOperation({ summary: 'Add a new assignment ' })
+  @ApiResponse({
+    status: 201,
+    description: 'Tarefa adicionada com sucesso',
+    type: ReturnCreateAssignmentSwagger
+  })
   async createAssignment(
     @Body()
     createAssignment: CreateAssignmentDto
@@ -44,18 +62,36 @@ export class AssignmentsController {
 
   @Get()
   @ApiOperation({ summary: 'Search assignments ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefas retornadas com sucesso',
+    type: ReturnAssignemntsSwagger
+  })
+  @ApiQuery({ name: 'Page', required: false })
+  @ApiQuery({ name: 'PerPage', required: false })
   async findAssignments(
     @UserId() userId: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10
-  ): Promise<ReturnAssignmentDto[]> {
-    return (
-      await this.assignmentService.findAssignmentsByUserId(userId, page, limit)
-    ).map((assignment) => new ReturnAssignmentDto(assignment));
+    @Query('Page') page: number = 1,
+    @Query('PerPage') limit: number = 10
+  ): Promise<{ items: ReturnAssignmentDto[] }> {
+    const assignments = await this.assignmentService.findAssignmentsByUserId(
+      userId,
+      page,
+      limit
+    );
+    const mappedAssignments = assignments.map(
+      (assignment) => new ReturnAssignmentDto(assignment)
+    );
+    return { items: mappedAssignments };
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a assignment ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa retornada com sucesso',
+    type: ReturnOneAssignmentSwagger
+  })
   async findAssignmentsById(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -66,6 +102,11 @@ export class AssignmentsController {
 
   @Patch(':id/conclude')
   @ApiOperation({ summary: 'Conclude a task ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa concluída com sucesso',
+    type: AssignmentEntity
+  })
   async updatedAssignmentConclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -76,6 +117,11 @@ export class AssignmentsController {
 
   @Patch(':id/unconclude')
   @ApiOperation({ summary: 'Desconclude a task ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa marcada como não concluída com sucesso',
+    type: ReturnUnconcludeAssignmentSwagger
+  })
   async updatedAssignmentUnconclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -86,6 +132,11 @@ export class AssignmentsController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a assignment ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa deletada com sucesso',
+    type: ReturnDeletedItemSwagger
+  })
   async deleteAssignment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<DeleteResult> {
@@ -94,6 +145,11 @@ export class AssignmentsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Edit a assignment ' })
+  @ApiResponse({
+    status: 200,
+    description: 'Tarefa editada com sucesso',
+    type: UpdatedAssignmentDto
+  })
   async updateAssigment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string,
     @Body() assignmentUpdated: UpdatedAssignmentDto

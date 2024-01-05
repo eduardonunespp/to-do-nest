@@ -85,6 +85,8 @@ export class AssignmentsService {
     user.assigmentList.forEach((assignmentList) => {
       if (assignmentList.assignments) {
         assignments = assignments.concat(assignmentList.assignments);
+      } else {
+        throw new NotFoundException('assignments not found');
       }
     });
 

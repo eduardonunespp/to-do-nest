@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { AssignmentListEntity } from 'src/assignment-list/entity';
 import {
   Column,
@@ -13,18 +14,23 @@ import { v4 as uuidv4 } from 'uuid';
 @Entity()
 export class AssignmentEntity {
   @PrimaryGeneratedColumn('uuid')
+  @ApiProperty()
   id: string = uuidv4();
 
   @Column({ name: 'description', nullable: false })
+  @ApiProperty()
   description: string;
 
   @Column({ name: 'dead_line', nullable: false })
+  @ApiProperty()
   deadLine: Date;
 
   @Column({ name: 'assignment_list_id', nullable: false })
+  @ApiProperty()
   assignmentListId: string;
 
   @Column({ name: 'concluded', nullable: true, default: false })
+  @ApiProperty()
   concluded: boolean;
 
   @Column({
@@ -35,9 +41,11 @@ export class AssignmentEntity {
   concludeAt: Date;
 
   @CreateDateColumn({ name: 'created_at' })
+  @ApiProperty()
   createAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
+  @ApiProperty()
   updateAt: Date;
 
   @ManyToOne(

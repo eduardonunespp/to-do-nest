@@ -1,9 +1,14 @@
 import { ReturnAssignmentDto } from 'src/assignments/dtos';
 import { AssignmentListEntity } from '../entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ReturnAssignmentListDto {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   name: string;
+
+  @ApiProperty()
   assignments?: ReturnAssignmentDto[];
 
   constructor(assignmentListEntity: AssignmentListEntity) {
