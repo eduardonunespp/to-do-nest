@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UnprocessableEntityException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -76,6 +77,7 @@ export class AssignmentListService {
   }
 
   async updateAssigmentList(
+    userId: string,
     assignmentlistId: string,
     updatedAssignmentList: UpdateAssignmentListDto
   ): Promise<AssignmentListEntity> {
@@ -87,14 +89,27 @@ export class AssignmentListService {
       );
     }
 
+    if (assigmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to update this list`
+      );
+    }
+
     return this.assignmentListRepository.save({
       ...assigmentList,
       ...updatedAssignmentList
     });
   }
 
-  async deleteAssignmentList(assignmentListId: string): Promise<DeleteResult> {
+  async deleteAssignmentList(
+    assignmentListId: string,
+    userId: string
+  ): Promise<DeleteResult> {
     const assignmentList = await this.findAssignmentListById(assignmentListId);
+
+    if (!assignmentList) {
+      throw new NotFoundException(`List not found with Id ${assignmentListId}`);
+    }
 
     const hasUncompletedAssignments = assignmentList.assignments.some(
       (assignment) => assignment.concluded === false
@@ -103,6 +118,12 @@ export class AssignmentListService {
     if (hasUncompletedAssignments) {
       throw new UnprocessableEntityException(
         'Existem tarefas não concluídas na lista.'
+      );
+    }
+
+    if (assignmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to delete this list`
       );
     }
 

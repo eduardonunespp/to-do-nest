@@ -127,10 +127,14 @@ export class AssignmentsController {
     type: ReturnOneNotFoundAssignment
   })
   async updatedAssignmentConclude(
+    @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
-      await this.assignmentService.updatedConcludeAssignment(assignmentId)
+      await this.assignmentService.updatedConcludeAssignment(
+        userId,
+        assignmentId
+      )
     );
   }
 
@@ -147,10 +151,14 @@ export class AssignmentsController {
     type: ReturnOneNotFoundAssignment
   })
   async updatedAssignmentUnconclude(
+    @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
-      await this.assignmentService.updatedUnconcludeAssignment(assignmentId)
+      await this.assignmentService.updatedUnconcludeAssignment(
+        userId,
+        assignmentId
+      )
     );
   }
 
@@ -167,9 +175,10 @@ export class AssignmentsController {
     type: ReturnOneNotFoundAssignment
   })
   async deleteAssignment(
+    @UserId() UserId: string,
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<DeleteResult> {
-    return this.assignmentService.deleteAssignment(assignmentId);
+    return this.assignmentService.deleteAssignment(UserId, assignmentId);
   }
 
   @Put(':id')
@@ -185,11 +194,13 @@ export class AssignmentsController {
     type: ReturnOneNotFoundAssignment
   })
   async updateAssigment(
+    @UserId() UserId: string,
     @Param('id', new ParseUUIDPipe()) assignmentId: string,
     @Body() assignmentUpdated: UpdatedAssignmentDto
   ): Promise<ReturnAssignmentDto> {
     return new ReturnAssignmentDto(
       await this.assignmentService.updateAssignment(
+        UserId,
         assignmentId,
         assignmentUpdated
       )

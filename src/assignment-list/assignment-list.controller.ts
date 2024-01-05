@@ -127,10 +127,12 @@ export class AssignmentListController {
     type: ReturnOneNotFoundAssignmentList
   })
   async updateAssignmentList(
+    @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) assignmentListId: string,
     @Body() updatedAssignmentList: UpdateAssignmentListDto
   ): Promise<AssignmentListEntity> {
     return await this.assigmentListService.updateAssigmentList(
+      userId,
       assignmentListId,
       updatedAssignmentList
     );
@@ -154,8 +156,12 @@ export class AssignmentListController {
     type: ReturnUnprocessableAssignmentList
   })
   async deleteAssignmentList(
+    @UserId() userId: string,
     @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<DeleteResult> {
-    return this.assigmentListService.deleteAssignmentList(assignmentListId);
+    return this.assigmentListService.deleteAssignmentList(
+      userId,
+      assignmentListId
+    );
   }
 }

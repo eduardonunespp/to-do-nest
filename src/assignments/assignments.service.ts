@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ParseUUIDPipe,
+  UnauthorizedException,
   UnprocessableEntityException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -114,9 +115,20 @@ export class AssignmentsService {
   }
 
   async updatedConcludeAssignment(
+    userId: string,
     assignmentId: string
   ): Promise<AssignmentEntity> {
     const assignment = await this.findAssignmentById(assignmentId);
+
+    const assignmentList =
+      await this.assignmentListService.findAssignmentListById(
+        assignment.assignmentListId
+      );
+    if (assignmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to conclude this assignment`
+      );
+    }
 
     if (!assignment.concluded) {
       assignment.concluded = true;
@@ -127,29 +139,64 @@ export class AssignmentsService {
   }
 
   async updatedUnconcludeAssignment(
+    userId: string,
     assignmentId: string
   ): Promise<AssignmentEntity> {
     const assignment = await this.findAssignmentById(assignmentId);
 
+    const assignmentList =
+      await this.assignmentListService.findAssignmentListById(
+        assignment.assignmentListId
+      );
+    if (assignmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to unconclude this assignment`
+      );
+    }
+
     if (assignment.concluded) {
       assignment.concluded = false;
-      assignment.concludeAt = new Date(0);
+      assignment.concludeAt = null;
     }
 
     return this.assignmentsRepository.save(assignment);
   }
 
-  async deleteAssignment(assignmentId: string): Promise<DeleteResult> {
-    await this.findAssignmentById(assignmentId);
+  async deleteAssignment(
+    userId: string,
+    assignmentId: string
+  ): Promise<DeleteResult> {
+    const assignment = await this.findAssignmentById(assignmentId);
+
+    const assignmentList =
+      await this.assignmentListService.findAssignmentListById(
+        assignment.assignmentListId
+      );
+    if (assignmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to delete this assignment`
+      );
+    }
 
     return this.assignmentsRepository.delete({ id: assignmentId });
   }
 
   async updateAssignment(
+    userId: string,
     assignmentId: string,
     assignmentUpdated: UpdatedAssignmentDto
   ): Promise<AssignmentEntity> {
     const assignment = await this.findAssignmentById(assignmentId);
+
+    const assignmentList =
+      await this.assignmentListService.findAssignmentListById(
+        assignment.assignmentListId
+      );
+    if (assignmentList.userId !== userId) {
+      throw new UnauthorizedException(
+        `You do not have permission to update this assignment`
+      );
+    }
 
     return this.assignmentsRepository.save({
       ...assignment,

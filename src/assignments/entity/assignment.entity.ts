@@ -36,7 +36,7 @@ export class AssignmentEntity {
   @Column({
     name: 'conclude_at',
     nullable: true,
-    default: new Date(0)
+    default: null
   })
   concludeAt: Date;
 
