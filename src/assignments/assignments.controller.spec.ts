@@ -6,7 +6,7 @@ describe('AssignmentsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [AssignmentsController],
+      controllers: [AssignmentsController]
     }).compile();
 
     controller = module.get<AssignmentsController>(AssignmentsController);

@@ -32,11 +32,15 @@ import {
 } from '@nestjs/swagger';
 import {
   ReturnCreateAssignmentSwagger,
-  ReturnAssignemntsSwagger,
+  ReturnAssignmentsSwagger,
   ReturnUnconcludeAssignmentSwagger
 } from './swagger';
 import { ReturnOneAssignmentSwagger } from './swagger/return-one-assignment';
 import { ReturnDeletedItemSwagger } from 'src/swagger';
+import {
+  ReturnNotFoundAssignments,
+  ReturnOneNotFoundAssignment
+} from './swagger/errors';
 
 @ApiTags('Assignments')
 @ApiBearerAuth('KEY_AUTH')
@@ -65,7 +69,12 @@ export class AssignmentsController {
   @ApiResponse({
     status: 200,
     description: 'Tarefas retornadas com sucesso',
-    type: ReturnAssignemntsSwagger
+    type: ReturnAssignmentsSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefas não encontradas',
+    type: ReturnNotFoundAssignments
   })
   @ApiQuery({ name: 'Page', required: false })
   @ApiQuery({ name: 'PerPage', required: false })
@@ -92,6 +101,11 @@ export class AssignmentsController {
     description: 'Tarefa retornada com sucesso',
     type: ReturnOneAssignmentSwagger
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+    type: ReturnOneNotFoundAssignment
+  })
   async findAssignmentsById(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -106,6 +120,11 @@ export class AssignmentsController {
     status: 200,
     description: 'Tarefa concluída com sucesso',
     type: AssignmentEntity
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+    type: ReturnOneNotFoundAssignment
   })
   async updatedAssignmentConclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
@@ -122,6 +141,11 @@ export class AssignmentsController {
     description: 'Tarefa marcada como não concluída com sucesso',
     type: ReturnUnconcludeAssignmentSwagger
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+    type: ReturnOneNotFoundAssignment
+  })
   async updatedAssignmentUnconclude(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<ReturnAssignmentDto> {
@@ -137,6 +161,11 @@ export class AssignmentsController {
     description: 'Tarefa deletada com sucesso',
     type: ReturnDeletedItemSwagger
   })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+    type: ReturnOneNotFoundAssignment
+  })
   async deleteAssignment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string
   ): Promise<DeleteResult> {
@@ -149,6 +178,11 @@ export class AssignmentsController {
     status: 200,
     description: 'Tarefa editada com sucesso',
     type: UpdatedAssignmentDto
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Tarefa não encontrada',
+    type: ReturnOneNotFoundAssignment
   })
   async updateAssigment(
     @Param('id', new ParseUUIDPipe()) assignmentId: string,

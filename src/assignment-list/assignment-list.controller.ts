@@ -37,6 +37,10 @@ import {
   ReturnOneAssignmentListSwagger
 } from './swagger';
 import { ReturnDeletedItemSwagger } from 'src/swagger';
+import {
+  ReturnNotFoundAssignmentList,
+  ReturnOneNotFoundAssignmentList
+} from './swagger/errors';
 
 @Roles(UserType.User)
 @ApiBearerAuth('KEY_AUTH')
@@ -53,7 +57,6 @@ export class AssignmentListController {
     description: 'Lista criada com sucesso',
     type: ReturnAssignmentCreatedSwagger
   })
-  @ApiResponse({ status: 400, description: 'Parâmetros inválidos' })
   async createAssigmentListDto(
     @UserId() id: string,
     @Body() createAssigmentList: CreateAssignmentListDto
@@ -70,6 +73,11 @@ export class AssignmentListController {
     status: 200,
     description: 'AssignmentLists retornadas com sucesso',
     type: ReturnAssignmentListSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'AssignmentLists não encontradas',
+    type: ReturnNotFoundAssignmentList
   })
   @ApiQuery({ name: 'Page', required: false })
   @ApiQuery({ name: 'PerPage', required: false })
@@ -97,6 +105,11 @@ export class AssignmentListController {
     description: 'AssignmentList retornadas com sucesso',
     type: ReturnOneAssignmentListSwagger
   })
+  @ApiResponse({
+    status: 404,
+    description: 'AssignmentList não encontrada',
+    type: ReturnOneNotFoundAssignmentList
+  })
   async findAssignmentListById(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string
   ): Promise<ReturnAssignmentListDto> {
@@ -111,6 +124,11 @@ export class AssignmentListController {
     status: 200,
     description: 'AssignmentList editada com sucesso',
     type: ReturnAssignmentListUpdatedSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'AssignmentList não encontrada',
+    type: ReturnOneNotFoundAssignmentList
   })
   async updateAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string,
@@ -130,6 +148,11 @@ export class AssignmentListController {
     status: 200,
     description: 'AssignmentList deletada com sucesso',
     type: ReturnDeletedItemSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'AssignmentList não encontrada',
+    type: ReturnOneNotFoundAssignmentList
   })
   async deleteAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string
