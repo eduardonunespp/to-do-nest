@@ -43,3 +43,23 @@ export class ReturnOneNotFoundAssignmentList {
   })
   statusCode: number;
 }
+
+export class ReturnUnprocessableAssignmentList {
+  @ApiProperty({
+    example: 'Existem tarefas não concluídas na lista.',
+    description: 'Mensagem de erro quando há tarefas não concluídas na lista'
+  })
+  message: string;
+
+  @ApiProperty({
+    example: 'Unprocessable Entity',
+    description: 'Tipo de erro para Entidade Não Processável'
+  })
+  error: string;
+
+  @ApiProperty({
+    example: 422,
+    description: 'Código de status HTTP para Entidade Não Processável'
+  })
+  statusCode: number;
+}

@@ -177,7 +177,7 @@ export class AssignmentsController {
   @ApiResponse({
     status: 200,
     description: 'Tarefa editada com sucesso',
-    type: UpdatedAssignmentDto
+    type: ReturnAssignmentDto
   })
   @ApiResponse({
     status: 404,

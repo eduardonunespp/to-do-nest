@@ -1,15 +1,14 @@
 import {
   Body,
   Controller,
-  Get,
-  Param,
   Post,
   UsePipes,
   ValidationPipe
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateReturnUserDto, CreateUserDto, ReturnUserDto } from './dtos';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateReturnUserDto, CreateUserDto } from './dtos';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { UserEntity } from './entity';
 
 @ApiTags('Auth')
 @Controller('user')
@@ -19,23 +18,16 @@ export class UserController {
   @UsePipes(ValidationPipe)
   @Post('/register')
   @ApiOperation({ summary: 'Register account' })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário cadastrado com sucesso',
+    type: UserEntity
+  })
   async createUser(
     @Body() createUserDto: CreateUserDto
   ): Promise<CreateReturnUserDto> {
     return new CreateReturnUserDto(
       await this.userService.createUser(createUserDto)
     );
-  }
-
-  @Get()
-  async findUsers(): Promise<ReturnUserDto[]> {
-    return (await this.userService.findUsers()).map(
-      (user) => new ReturnUserDto(user)
-    );
-  }
-
-  @Get(':id')
-  async findUserById(@Param('id') id: string): Promise<ReturnUserDto> {
-    return new ReturnUserDto(await this.userService.findUserById(id));
   }
 }

@@ -13,11 +13,7 @@ import {
 } from '@nestjs/common';
 import { AssignmentListService } from './assignment-list.service';
 import { AssignmentListEntity } from './entity';
-import {
-  CreateAssignmentListDto,
-  ReturnAssignmentListUpdatedDto,
-  UpdateAssignmentListDto
-} from './dtos';
+import { CreateAssignmentListDto, UpdateAssignmentListDto } from './dtos';
 import { ReturnAssignmentListDto } from './dtos/return-assignment-list.dto';
 import { DeleteResult } from 'typeorm';
 import { Roles } from 'src/core/decorators/roles.decorator';
@@ -33,13 +29,13 @@ import {
 import {
   ReturnAssignmentCreatedSwagger,
   ReturnAssignmentListSwagger,
-  ReturnAssignmentListUpdatedSwagger,
   ReturnOneAssignmentListSwagger
 } from './swagger';
 import { ReturnDeletedItemSwagger } from 'src/swagger';
 import {
   ReturnNotFoundAssignmentList,
-  ReturnOneNotFoundAssignmentList
+  ReturnOneNotFoundAssignmentList,
+  ReturnUnprocessableAssignmentList
 } from './swagger/errors';
 
 @Roles(UserType.User)
@@ -123,7 +119,7 @@ export class AssignmentListController {
   @ApiResponse({
     status: 200,
     description: 'AssignmentList editada com sucesso',
-    type: ReturnAssignmentListUpdatedSwagger
+    type: AssignmentListEntity
   })
   @ApiResponse({
     status: 404,
@@ -133,12 +129,10 @@ export class AssignmentListController {
   async updateAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string,
     @Body() updatedAssignmentList: UpdateAssignmentListDto
-  ): Promise<ReturnAssignmentListDto> {
-    return new ReturnAssignmentListUpdatedDto(
-      await this.assigmentListService.updateAssigmentList(
-        assignmentListId,
-        updatedAssignmentList
-      )
+  ): Promise<AssignmentListEntity> {
+    return await this.assigmentListService.updateAssigmentList(
+      assignmentListId,
+      updatedAssignmentList
     );
   }
 
@@ -153,6 +147,11 @@ export class AssignmentListController {
     status: 404,
     description: 'AssignmentList não encontrada',
     type: ReturnOneNotFoundAssignmentList
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'AssignmentList não com tarefas não concluídas',
+    type: ReturnUnprocessableAssignmentList
   })
   async deleteAssignmentList(
     @Param('id', new ParseUUIDPipe()) assignmentListId: string

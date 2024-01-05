@@ -7,7 +7,9 @@ import {
 } from '@nestjs/common';
 import { LoginDto, ReturnLoginDto } from './dtos';
 import { AuthService } from './auth.service';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ReturnUserLoggedSwagger } from './swagger';
+import { ReturnUserLoginError } from './swagger/error';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -17,6 +19,16 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   @Post()
   @ApiOperation({ summary: 'Login a user' })
+  @ApiResponse({
+    status: 201,
+    description: 'Usuário autenticado com sucesso',
+    type: ReturnUserLoggedSwagger
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Erro de autenticação',
+    type: ReturnUserLoginError
+  })
   async login(@Body() loginUser: LoginDto): Promise<ReturnLoginDto> {
     return await this.authService.login(loginUser);
   }
