@@ -70,7 +70,7 @@ export class AssignmentListService {
     });
 
     if (!assignmentList) {
-      throw new NotFoundException(`list not found for user with id ${listId}`);
+      throw new NotFoundException(`list not found for id ${listId}`);
     }
 
     return assignmentList;
@@ -82,12 +82,6 @@ export class AssignmentListService {
     updatedAssignmentList: UpdateAssignmentListDto
   ): Promise<AssignmentListEntity> {
     const assigmentList = await this.findAssignmentListById(assignmentlistId);
-
-    if (!assigmentList) {
-      throw new NotFoundException(
-        `list not found for user with Id ${assignmentlistId}`
-      );
-    }
 
     if (assigmentList.userId !== userId) {
       throw new UnauthorizedException(
@@ -102,8 +96,8 @@ export class AssignmentListService {
   }
 
   async deleteAssignmentList(
-    assignmentListId: string,
-    userId: string
+    userId: string,
+    assignmentListId: string
   ): Promise<DeleteResult> {
     const assignmentList = await this.findAssignmentListById(assignmentListId);
 
