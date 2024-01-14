@@ -11,6 +11,7 @@ export class CreateTableAssignment1704209044267 implements MigrationInterface {
           description VARCHAR NOT NULL,
           dead_line TIMESTAMP NOT NULL,
           assignment_list_id UUID NOT NULL,
+          assignment_list_name VARCHAR NOT NULL,
           concluded BOOLEAN DEFAULT FALSE,
           conclude_at TIMESTAMP DEFAULT 'epoch'::TIMESTAMP,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

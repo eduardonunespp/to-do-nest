@@ -55,7 +55,7 @@ export class AssignmentListService {
     });
 
     if (!assignmentLists || assignmentLists.length === 0) {
-      throw new NotFoundException(`assignment list not found`);
+      return [];
     }
 
     return assignmentLists;

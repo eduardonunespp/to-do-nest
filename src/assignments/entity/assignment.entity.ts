@@ -29,6 +29,10 @@ export class AssignmentEntity {
   @ApiProperty()
   assignmentListId: string;
 
+  @Column({ name: 'assignment_list_name', nullable: false })
+  @ApiProperty()
+  assignmentListName: string;
+
   @Column({ name: 'concluded', nullable: true, default: false })
   @ApiProperty()
   concluded: boolean;

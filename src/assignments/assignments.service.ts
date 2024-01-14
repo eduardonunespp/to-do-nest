@@ -23,9 +23,10 @@ export class AssignmentsService {
   async createAssignment(
     createAssignment: CreateAssignmentDto
   ): Promise<AssignmentEntity> {
-    await this.assignmentListService.findAssignmentListById(
-      createAssignment.assignmentListId
-    );
+    const assignmentList =
+      await this.assignmentListService.findAssignmentListById(
+        createAssignment.assignmentListId
+      );
 
     const parseUUIDPipe = new ParseUUIDPipe({ version: '4' });
 
@@ -50,7 +51,8 @@ export class AssignmentsService {
     return await this.assignmentsRepository.save({
       ...createAssignment,
       assignmentListId,
-      deadLine: formattedDate
+      deadLine: formattedDate,
+      assignmentListName: assignmentList.name
     });
   }
 
@@ -79,7 +81,7 @@ export class AssignmentsService {
     const user = await this.userService.findUserById(userId);
 
     if (!user.assigmentList || user.assigmentList.length === 0) {
-      throw new NotFoundException(`assignments not found`);
+      return [];
     }
 
     let assignments: AssignmentEntity[] = [];
@@ -87,7 +89,7 @@ export class AssignmentsService {
       if (assignmentList.assignments) {
         assignments = assignments.concat(assignmentList.assignments);
       } else {
-        throw new NotFoundException('assignments not found');
+        return [];
       }
     });
 
