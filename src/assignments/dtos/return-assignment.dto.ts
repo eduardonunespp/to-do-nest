@@ -33,6 +33,12 @@ export class ReturnAssignmentDto {
   assignmentListId: string;
 
   @ApiProperty({
+    example: 'exampleList',
+    description: 'Nome da lista'
+  })
+  assignmentListName: string;
+
+  @ApiProperty({
     example: false,
     description: 'Indica se a atribuição foi concluída ou não'
   })
@@ -43,6 +49,7 @@ export class ReturnAssignmentDto {
     this.description = assignment.description;
     this.deadLine = assignment.deadLine;
     this.assignmentListId = assignment.assignmentListId;
+    this.assignmentListName = assignment.assignmentListName;
     this.concluded = assignment.concluded;
     this.concludeAt = assignment.concludeAt;
   }
