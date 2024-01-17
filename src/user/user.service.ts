@@ -23,7 +23,7 @@ export class UserService {
     );
 
     if (user) {
-      throw new ConflictException('email registered in system ');
+      throw new ConflictException('Email já registrado ');
     }
 
     const { password, confirmPassword } = createUserDto;

@@ -111,7 +111,7 @@ export class AssignmentListService {
 
     if (hasUncompletedAssignments) {
       throw new UnprocessableEntityException(
-        'Existem tarefas não concluídas na lista.'
+        'Existem tarefas não concluídas na lista'
       );
     }
 

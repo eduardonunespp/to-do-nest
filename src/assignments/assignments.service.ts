@@ -44,7 +44,7 @@ export class AssignmentsService {
 
     if (formattedDate < new Date()) {
       throw new UnprocessableEntityException(
-        'a data de conclusão deve ser maior que a data atual'
+        'A data de conclusão deve ser maior que a data atual'
       );
     }
 
@@ -67,7 +67,7 @@ export class AssignmentsService {
     });
 
     if (!assignments || assignments.length === 0) {
-      throw new NotFoundException(`assignments not found`);
+      throw new NotFoundException(`Assignments not found`);
     }
 
     return assignments;
@@ -109,7 +109,7 @@ export class AssignmentsService {
 
     if (!assignment) {
       throw new NotFoundException(
-        `assignment not found with Id ${assignmentId}`
+        `Assignment not found with Id ${assignmentId}`
       );
     }
 
