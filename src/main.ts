@@ -11,7 +11,7 @@ async function bootstrap() {
   app.use(cors());
 
   const config = new DocumentBuilder()
-    .setTitle('Todo Api Documentation')
+    .setTitle('To-do Api Documentation')
     .setDescription('Todo Api Documentation')
     .addBearerAuth(
       {
